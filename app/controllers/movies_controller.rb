@@ -7,7 +7,51 @@ class MoviesController < ApplicationController
     end
   
     def index
-      @movies = Movie.all
+      @all_ratings = ['G','R','PG-13','PG']
+      prev_ratings = []
+      unless params['ratings'].nil?
+        for element in params['ratings'] do
+          prev_ratings.append(element)
+        end
+      end
+      @ratings_to_show = prev_ratings
+
+      #0 means ASC, #1 DSC, #2 no sort 
+      prev_sort_title = ''
+      prev_sort_release_date = ''
+
+      unless params['sort_title'].nil?
+        prev_sort_title = params['sort_title']
+      end
+
+      unless params['sort_release_date'].nil?
+        prev_sort_release_date = params['sort_release_date']
+      end
+      
+      #no sort
+      if prev_sort_title == '' and prev_sort_release_date == '' then
+        @sort_title = 'asc'
+        @movies = Movie.with_ratings(@ratings_to_show)
+        @sort_release_date = 'asc'
+      elsif prev_sort_title == '' then 
+        @movies = Movie.with_ratings(@ratings_to_show).order('release_date': prev_sort_release_date)
+        @sort_title = 'asc'
+        if (prev_sort_release_date == 'asc') then
+          @sort_release_date = 'desc'
+        else
+          @sort_release_date = 'asc'
+        end
+        @release_date_class = "bg-warning"
+      elsif prev_sort_release_date = '' then
+        @movies = Movie.with_ratings(@ratings_to_show).order('title': prev_sort_title)
+        if (prev_sort_title == 'asc') then
+          @sort_title = 'desc'
+        else
+          @sort_title = 'asc'
+        end
+        @title_class = "bg-warning hilite"
+        @sort_release_date = 'asc'
+      end
     end
   
     def new
