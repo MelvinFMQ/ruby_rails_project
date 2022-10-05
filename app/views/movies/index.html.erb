@@ -16,9 +16,11 @@
 <table class="table table-striped col-md-12" id="movies">
   <thead>
     <tr>
-      <th class="<%=@title_class%>"><a href="/?sort_title=<%= @sort_title %>" id="title_header"> Movie Title </a></th>
+    
+
+      <th class="<%=@title_class%>"> <%= link_to "Movie Title!", movies_path(sort_title: @sort_title, ratings: @ratings_to_show) %></th> 
       <th>Rating</th>
-      <th class="<%=@release_date_class%>"><a href="/?sort_release_date=<%= @sort_release_date %>" id="release_date_header"> Release Date </a></th>
+      <th class="<%=@release_date_class%>"><%= link_to "Release Date", movies_path(sort_release_date: @sort_release_date, ratings: @ratings_to_show) %></th>
       <th>More Info</th>
 
     </tr>

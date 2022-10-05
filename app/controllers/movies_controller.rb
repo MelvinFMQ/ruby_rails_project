@@ -8,15 +8,12 @@ class MoviesController < ApplicationController
   
     def index
       @all_ratings = ['G','R','PG-13','PG']
-      prev_ratings = []
+      @ratings_to_show = {}
       unless params['ratings'].nil?
-        for element in params['ratings'] do
-          prev_ratings.append(element)
-        end
+        @ratings_to_show = params['ratings']
       end
-      @ratings_to_show = prev_ratings
 
-      #0 means ASC, #1 DSC, #2 no sort 
+      #sort
       prev_sort_title = ''
       prev_sort_release_date = ''
 
@@ -31,10 +28,10 @@ class MoviesController < ApplicationController
       #no sort
       if prev_sort_title == '' and prev_sort_release_date == '' then
         @sort_title = 'asc'
-        @movies = Movie.with_ratings(@ratings_to_show)
+        @movies = Movie.with_ratings(@ratings_to_show.keys)
         @sort_release_date = 'asc'
       elsif prev_sort_title == '' then 
-        @movies = Movie.with_ratings(@ratings_to_show).order('release_date': prev_sort_release_date)
+        @movies = Movie.with_ratings(@ratings_to_show.keys).order('release_date': prev_sort_release_date)
         @sort_title = 'asc'
         if (prev_sort_release_date == 'asc') then
           @sort_release_date = 'desc'
@@ -43,7 +40,7 @@ class MoviesController < ApplicationController
         end
         @release_date_class = "bg-warning"
       elsif prev_sort_release_date = '' then
-        @movies = Movie.with_ratings(@ratings_to_show).order('title': prev_sort_title)
+        @movies = Movie.with_ratings(@ratings_to_show.keys).order('title': prev_sort_title)
         if (prev_sort_title == 'asc') then
           @sort_title = 'desc'
         else
