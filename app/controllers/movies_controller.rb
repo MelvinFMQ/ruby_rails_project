@@ -38,7 +38,7 @@ class MoviesController < ApplicationController
         else
           @sort_release_date = 'asc'
         end
-        @release_date_class = "bg-warning"
+        @release_date_class = "bg-warning hilite"
       elsif prev_sort_release_date = '' then
         @movies = Movie.with_ratings(@ratings_to_show.keys).order('title': prev_sort_title)
         if (prev_sort_title == 'asc') then
